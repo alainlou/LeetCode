@@ -10,16 +10,17 @@ struct TreeNode {
 };
 class Solution {
 public:
-    bool hasCycle(ListNode *head) {
-        ListNode *slow = head;
-        ListNode *fast = head;
-        while(slow && fast && fast->next) {
-            slow = slow->next;
-            fast = fast->next->next;
-            if(slow == fast) {
-                return true;
-            }
+    bool checkSymmetric(TreeNode* left, TreeNode* right) {
+        if(!left && !right) {
+            return true;
+        } else if(!left || !right) {
+            return false;
         }
-        return false;
+        return (left->val == right->val) 
+            && checkSymmetric(left->left, right->right)
+            && checkSymmetric(right->left, left->right);
+    }
+    bool isSymmetric(TreeNode* root) {
+        return checkSymmetric(root, root);        
     }
 };
