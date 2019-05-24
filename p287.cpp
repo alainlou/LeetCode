@@ -5,14 +5,17 @@ using namespace std;
 class Solution {
 public:
     int findDuplicate(vector<int>& nums) {
-        int n = nums.size();
-        for(int i = 0; i < n; ++i) {
-            for(int j = i+1; j < n; ++j) {
-                if(nums[i] == nums[j]) {
-                    return nums[i];
-                }
-            }
+        int slow = nums[0];
+        int fast = nums[nums[0]];
+        while(nums[slow] != nums[fast]) {
+            slow = nums[slow];
+            fast = nums[nums[fast]];
         }
-        return 0;
+        slow = 0;
+        while(slow != fast) {
+            slow = nums[slow];
+            fast = nums[fast];
+        }
+        return slow;
     }
 };
