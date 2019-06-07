@@ -6,29 +6,22 @@ using namespace std;
 class Solution {
 public:
     ListNode* removeNthFromEnd(ListNode* head, int n) {
-        if(head->next == NULL) {
-            return NULL;
-        }
-        int length = 0;
+        ListNode* prev = NULL;
         ListNode* curr = head;
-        while(curr) {
-            curr = curr->next;
-            ++length;
+        ListNode* look = head;
+        for(int i = 0; i < n; ++i) {
+            look = look->next;
         }
-        int from_front = length - n;
-        if(from_front == 0) {
+        while(look) {
+            prev = curr;
+            curr = curr->next;
+            look = look->next;
+        }
+        if(!prev) {
             return head->next;
+        } else {
+            prev->next = curr->next;
+            return head;
         }
-        int index = 0;
-        curr = head;
-        while(curr) {
-            if(index + 1 == from_front) {
-                curr->next = curr->next->next;
-                break;
-            }
-            curr = curr->next;
-            ++index;
-        }
-        return head;
     }
 };
