@@ -4,34 +4,27 @@ using namespace std;
 
 class Solution {
 public:
-    void mark(vector<vector<char>>& grid, vector<vector<bool>>& visited, int i, int j) {
-        if(i >= grid.size() || j >= grid[0].size() || i < 0 || j < 0 ||
-           grid[i][j] == '0' ||
-           visited[i][j]
-          ) {
+    void fill(vector<vector<char>>& grid, int row, int col) {
+        bool out_of_bounds = row < 0 || row >= grid.size() || col < 0 || col >= grid[0].size();
+        if(out_of_bounds || grid[row][col] == '0') {
             return;
-        } else {
-            visited[i][j] = true;
-            mark(grid, visited, i+1, j);
-            mark(grid, visited, i-1, j);
-            mark(grid, visited, i, j+1);
-            mark(grid, visited, i, j-1);            
         }
+        grid[row][col] = '0';
+        fill(grid, row+1, col);
+        fill(grid, row-1, col);
+        fill(grid, row, col+1);
+        fill(grid, row, col-1);
     }
     int numIslands(vector<vector<char>>& grid) {
-        if(grid.size() == 0) {
-            return 0;
-        }
-        vector<vector<bool>> visited(grid.size(), vector<bool>(grid[0].size(), false));
-        int counter = 0;
-        for(int i {0}; i < grid.size(); ++i) {
-            for(int j {0}; j < grid[0].size(); ++j) {
-                if(grid[i][j] == '1' && !visited[i][j]) {
-                    ++counter;
-                    mark(grid, visited, i, j);
+        int count = 0;
+        for(int i = 0; i < grid.size(); ++i) {
+            for(int j = 0; j < grid[0].size(); ++j) {
+                if(grid[i][j] == '1') {
+                    ++count;
+                    fill(grid, i, j);
                 }
             }
         }
-        return counter;
+        return count;
     }
 };
