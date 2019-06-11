@@ -13,9 +13,7 @@ public:
         if(accumulate == sum) {
             return 1 + find(root->left, sum, accumulate) + find(root->right, sum, accumulate);
         }
-        else {
-            return find(root->left, sum, accumulate) + find(root->right, sum, accumulate);
-        }
+        return find(root->left, sum, accumulate) + find(root->right, sum, accumulate);
     }
     int pathSum(TreeNode* root, int sum) {
         if(root == NULL) {
