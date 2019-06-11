@@ -17,15 +17,17 @@ public:
         if(row < 0 || row > num_rows - 1 || col < 0 || col > num_cols - 1) {
             return;
         }
+        // has it been visited
         if(visited[row][col]) {
             return;
         }
+        // set it to have been visited
         visited[row][col] = true;
         // is it not the same component
         if(grid[row][col] != old) {
             return;
         }
-        // is it an edge?
+        // is it an edge
         bool is_edge = row == 0 || row == num_rows - 1 || col == 0 || col == num_cols - 1;
         // is it a border
         bool is_border = is_edge || copy[row][col+1] != old || copy[row][col-1] != old || copy[row+1][col] != old || copy[row-1][col] != old;
