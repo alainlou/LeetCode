@@ -40,12 +40,11 @@ int partition(vector<int> &vec, int left, int right) {
 }
 
 void quicksort(vector<int> &vec, int left, int right) {
-    // start of the right (all elements in the right are greater than all elements of the left)
-    int div = partition(vec, left, right);
-    // this block is a sorted subarray
-    if(div == left) {
+    if(left >= right) {
         return;
     }
+    // start of the right (all elements in the right are greater than all elements of the left)
+    int div = partition(vec, left, right);
     // sort the left side
     quicksort(vec, left, div - 1);
     // sort the right side
@@ -57,7 +56,7 @@ void quicksort(vector<int> &vec) {
 }
 
 int main() {
-    vector<int> vec = {0, 9, -2, -8, -9, 8, 7, 6, 5, 4, 3, 2, 1};
+    vector<int> vec = {0, 9, -2, -8, -9, 8, 7, 6, 5, 4, 3, 2, 1, -8, -10, -234};
     print_vec(vec);
     quicksort(vec);
     print_vec(vec);
