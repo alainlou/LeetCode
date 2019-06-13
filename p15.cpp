@@ -8,20 +8,27 @@ public:
         if(nums.size() < 3) {
             return {};
         }
-        set<vector<int>> solution;
+        vector<int> last_added = {-1, -1, -1};
+        vector<vector<int>> solution;
         sort(nums.begin(), nums.end());
         for(int i = 0; i < nums.size() - 2; ++i) {
+            while(i > 0 && i < nums.size() - 3 && (nums[i] == nums[i-1])) {
+                ++i;
+            }
+            if(i > nums.size() - 3) {
+                break;
+            }
             int sum = -nums[i];
             // two pointers solution for two sum
             int left = i + 1;
             int right = nums.size() - 1;
-            if(solution.find({-sum, nums[left], nums[right]}) != solution.end()) {
-                continue;
-            }
             while(left < right) {
                 if(nums[left] + nums[right] == sum) {
-                    if(solution.find({-sum, nums[left], nums[right]}) == solution.end()) {
-                        solution.insert({-sum, nums[left], nums[right]});
+                    if(!(last_added[0] == -sum && last_added[1] == nums[left] && last_added[2] == nums[right])) {
+                        solution.push_back({-sum, nums[left], nums[right]});
+                        last_added[0] = -sum;
+                        last_added[1] = nums[left];
+                        last_added[2] = nums[right];
                     }
                 }
                 if(nums[left] + nums[right] < sum) {
@@ -31,10 +38,6 @@ public:
                 }
             }
         }
-        vector<vector<int>> result;
-        for(vector<int> vec : solution) {
-            result.push_back(vec);
-        }
-        return result;
+        return solution;
     }
 };
