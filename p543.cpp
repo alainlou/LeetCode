@@ -5,11 +5,16 @@ using namespace std;
 
 class Solution {
 public:
+    map<TreeNode*, int> depths;
     int depth(TreeNode* root) {
         if(root == NULL) {
             return 0;
+        } else if(depths[root]) {
+            return depths[root];
         }
-        return max(depth(root->left) + 1, depth(root->right) + 1);
+        int result = max(depth(root->left) + 1, depth(root->right) + 1);
+        depths[root] = result;
+        return result;
     }
     int diameterOfBinaryTree(TreeNode* root) {
         int diameter = 0;
