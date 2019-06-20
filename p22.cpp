@@ -16,21 +16,18 @@ public:
         }
         return diff == 0;
     }
-    void generate(string s, int diff, vector<string>& result, int n) {
-        if(diff < 0)
-            return;
-        if(s.size() == n) {
-            if(valid(s)) {
-                result.push_back(s);
-            }
-        } else {
-            generate(s + "(", diff+1, result, n);
-            generate(s + ")", diff-1, result, n);
-        }
+    void generate(string s, int open, int close, vector<string>& result, int n) {
+        if(s.size() == 2*n) {
+            result.push_back(s);
+        } 
+        if(open < n)
+            generate(s + "(", open+1, close, result, n);
+        if(close < open)
+            generate(s + ")", open, close+1, result, n);
     }
     vector<string> generateParenthesis(int n) {
         vector<string> answer;
-        generate("", 0, answer, 2*n);
+        generate("", 0, 0, answer, n);
         return answer;
     }
 };
