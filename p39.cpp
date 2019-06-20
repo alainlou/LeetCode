@@ -9,6 +9,7 @@ public:
     void generate(vector<int>& curr, int target, int start) {
         if(target == 0) {
             solution.push_back(curr);
+            return;
         }
         for(int i = start; i < candidates.size() && candidates[i] <= target; ++i) {
             curr.push_back(candidates[i]);
