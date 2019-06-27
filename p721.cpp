@@ -5,48 +5,57 @@ using namespace std;
 class Solution {
 public:
     vector<vector<string>> accountsMerge(vector<vector<string>>& accounts) {
-        vector<vector<string>> result;
-        vector<int> to_delete;
-        map<string, pair<string, int>> profiles;
-        for(int a = 0; a < accounts.size(); ++a) {
-            sort(accounts[a].begin(), accounts[a].end());
-        }
-        sort(accounts.begin(), accounts.end());
-        for(int i = 0; i < accounts.size(); ++i) {
-            vector<string> account = accounts[i];
-            bool found = false;
-            int index;
+        map<string, int> parent;
+        map<int, string> id_to_name;
+        int id = 0;
+        // put the accounts into maps for parent and id_to_name
+        for(vector<string> account : accounts) {
+            int union_into = -1;
+            set<int> to_combine;
             string name = account[0];
-            for(int j = 1; j < account.size(); ++j) {
-                if(profiles[account[j]].first == name && profiles[account[j]].second != i) {
-                    found = true;
-                    index = profiles[account[j]].second;
-                    break;
+            id_to_name[id] = name;
+            for(int i = 1; i < account.size(); ++i) {
+                string email = account[i];
+                if(parent.find(email) != parent.end() && parent[email] != id) {
+                    if(union_into == -1)
+                        union_into = parent[email];
+                    else
+                        to_combine.insert(parent[email]);
                 }
-                profiles[account[j]] = {name, i};
+                parent[email] = id;
             }
-            if(found) {
-                for(int k = 1; k < account.size(); ++k) {
-                    if(profiles[account[k]].second == i) {
-                        profiles[account[k]] = {name, index};
+            // perform the union
+            if(union_into > -1) {
+                for(int i = 1; i < account.size(); ++i) {
+                    string email = account[i];
+                    parent[email] = union_into;
+                }
+                for(map<string, int>::iterator iter = parent.begin(); iter != parent.end(); ++iter) {
+                    if(to_combine.find(iter->second) != to_combine.end()) {
+                        parent[iter->first] = union_into;
                     }
-                    // recognize a duplicate here
-                    accounts[index].push_back(account[k]);
-                }
-                accounts.erase(accounts.begin() + i);
-                cout << i << ", " << index << "; ";
-                i = index;
-            }
-        }
-        for(int a = 0; a < accounts.size(); ++a) {
-            sort(accounts[a].begin() + 1, accounts[a].end());
-            for(int b = 2; b < accounts[a].size(); ++b) {
-                if(accounts[a][b-1] == accounts[a][b]) {
-                    accounts[a].erase(accounts[a].begin() + b - 1);
-                    --b;
                 }
             }
+            ++id;
         }
-        return accounts;         
+        map<int, vector<string>> id_with_emails;
+        // create a map with key id and value vector of emails
+        for(map<string, int>::iterator iter = parent.begin(); iter != parent.end(); ++iter) {
+            if(id_with_emails.find(iter->second) == id_with_emails.end())
+                id_with_emails[iter->second] = {iter->first};
+            else
+                id_with_emails[iter->second].push_back(iter->first);
+        }
+        vector<vector<string>> result;
+        for(map<int, vector<string>>::iterator iter = id_with_emails.begin(); iter != id_with_emails.end(); ++iter) {
+            vector<string> entry;
+            entry.push_back(id_to_name[iter->first]);
+            for(string email : iter->second) {
+                entry.push_back(email);
+            }
+            result.push_back(entry);
+        }
+        // read from the parent and collect the emails that share the same parent
+        return result;
     }
 };
