@@ -5,25 +5,24 @@ using namespace std;
 class Solution {
 public:
     int computeArea(int A, int B, int C, int D, int E, int F, int G, int H) {
-        int counter = 0;
-        // set the bounds;
-        int start_x = min(A, E);
-        int n = max(C, G);
-        int start_y = min(B, F);
-        int m = max(D, H);
-        for(int i = start_x; i < n; ++i) {
-            for(int j = start_y; j < m; ++j) {
-                // check if the block at the location is in the bounds;
-                // case 1: it is in the first one
-                if(i >= A && i+1 <= C && j >= B && j+1 <= D) {
-                    ++counter;
-                }
-                // case 2: it is in the second one
-                else if(i >= E && i+1 <= G && j >= F && j+1 <= H) {
-                    ++counter;
-                }
-            }
+        int area = 0;
+        // make ABCD the rectangle on the left
+        if(A > E) {
+            swap(A, E);
+            swap(B, F);
+            swap(C, G);
+            swap(D, H);
         }
-        return counter;
+        bool x_overlap = A <= E && E <= C;
+        // overlap on one side or on both sides
+        bool y_overlap = (H > B && H <= D) || (F < D && F >= B) || (H > D && F < B);
+        if(x_overlap && y_overlap){
+            int width = min(C, G) - E;
+            int height = min(D, H) - max(B, F);
+            area -= width * height;
+        }
+        area += (C-A)*(D-B);
+        area += (G-E)*(H-F);
+        return area;
     }
 };
