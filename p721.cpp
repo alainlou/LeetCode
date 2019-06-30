@@ -2,60 +2,57 @@
 
 using namespace std;
 
+struct DisjointSet {
+    int parent[10000];
+    DisjointSet() {
+        for(int i = 0; i < 10000; ++i) {
+            parent[i] = i;
+        }
+    }
+    int find(int i) {
+        if(parent[i] != i)
+            parent[i] = find(parent[i]);
+        return parent[i];
+    }
+    void merge(int i, int j) {
+        parent[find(i)] = find(j);
+    }
+};
 class Solution {
 public:
     vector<vector<string>> accountsMerge(vector<vector<string>>& accounts) {
-        map<string, int> parent;
-        map<int, string> id_to_name;
+        DisjointSet ds;
+        unordered_map<string, int> email_to_id;
+        unordered_map<string, string> email_to_name;
         int id = 0;
-        // put the accounts into maps for parent and id_to_name
-        for(vector<string> account : accounts) {
-            int union_into = -1;
-            set<int> to_combine;
-            string name = account[0];
-            id_to_name[id] = name;
-            for(int i = 1; i < account.size(); ++i) {
-                string email = account[i];
-                if(parent.find(email) != parent.end() && parent[email] != id) {
-                    if(union_into == -1)
-                        union_into = parent[email];
-                    else
-                        to_combine.insert(parent[email]);
+        for(vector<string> row : accounts) {
+            string name = row[0];
+            for(int i = 1; i < row.size(); ++i) {
+                string email = row[i];
+                email_to_name[email] = name;
+                if(email_to_id.find(email) == email_to_id.end()) {
+                    email_to_id[email] = id++;
                 }
-                parent[email] = id;
+                ds.merge(email_to_id[row[1]], email_to_id[email]);
             }
-            // perform the union
-            if(union_into > -1) {
-                for(int i = 1; i < account.size(); ++i) {
-                    string email = account[i];
-                    parent[email] = union_into;
-                }
-                for(map<string, int>::iterator iter = parent.begin(); iter != parent.end(); ++iter) {
-                    if(to_combine.find(iter->second) != to_combine.end()) {
-                        parent[iter->first] = union_into;
-                    }
-                }
-            }
-            ++id;
         }
-        map<int, vector<string>> id_with_emails;
-        // create a map with key id and value vector of emails
-        for(map<string, int>::iterator iter = parent.begin(); iter != parent.end(); ++iter) {
-            if(id_with_emails.find(iter->second) == id_with_emails.end())
-                id_with_emails[iter->second] = {iter->first};
-            else
-                id_with_emails[iter->second].push_back(iter->first);
+        unordered_map<int, vector<string>> answer;
+        for(auto i = email_to_id.begin(); i != email_to_id.end(); ++i) {
+            int index = ds.find(email_to_id[i->first]);
+            if(answer.find(index) == answer.end()) {
+                answer[index] = {i->first};
+            } else {
+                answer[index].push_back(i->first);
+            }
         }
         vector<vector<string>> result;
-        for(map<int, vector<string>>::iterator iter = id_with_emails.begin(); iter != id_with_emails.end(); ++iter) {
-            vector<string> entry;
-            entry.push_back(id_to_name[iter->first]);
-            for(string email : iter->second) {
-                entry.push_back(email);
-            }
-            result.push_back(entry);
+        for(auto j = answer.begin(); j != answer.end(); ++j) {
+            vector<string> account = j->second;
+            sort(account.begin(), account.end());
+            vector<string> row = {email_to_name[account[0]]};
+            row.insert(row.end(), account.begin(), account.end());
+            result.push_back(row);
         }
-        // read from the parent and collect the emails that share the same parent
         return result;
     }
 };
