@@ -4,7 +4,6 @@ using namespace std;
 
 class Solution {
 public:
-    unordered_map<int, bool> solutions;
     bool works(vector<int>& weights, int D, int cap) {
         int i = 0;
         for(int day = 0; day < D; ++day) {
