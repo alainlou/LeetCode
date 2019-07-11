@@ -4,25 +4,24 @@ using namespace std;
 
 class Solution {
 public:
-    vector<vector<int>> answer;
-    void permute(int& n, vector<int>& curr, vector<int>& nums) {
-        if(curr.size() == n) {
-            answer.push_back(curr);
-            return;
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        map<array<int, 26>, vector<string>> result;
+        for(string s : strs) {
+            array<int, 26> count;
+            memset(count.begin(), 0, sizeof(count));
+            for(char c : s) {
+                ++count[c-'a'];
+            }
+            if(result.find(count) != result.end()) {
+                result[count].push_back(s);
+            } else {
+                result[count] = {s};
+            }
         }
-        for(int i = 0; i < nums.size(); ++i) {
-            int tmp = nums[i];
-            curr.push_back(tmp);
-            nums.erase(nums.begin() + i);
-            permute(n, curr, nums);
-            curr.pop_back();
-            nums.insert(nums.begin() + i, tmp);
+        vector<vector<string>> answer;
+        for(auto i = result.begin(); i != result.end(); ++i) {
+            answer.push_back(i->second);
         }
-    }
-    vector<vector<int>> permute(vector<int>& nums) {
-        int n = nums.size();
-        vector<int> curr;
-        permute(n, curr, nums);
         return answer;
     }
 };
