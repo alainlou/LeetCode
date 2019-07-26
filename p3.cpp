@@ -6,21 +6,13 @@ class Solution {
 public:
     int lengthOfLongestSubstring(string s) {
         int ans = 0;
-        unordered_set<char> seen;
-        for(int i = 0; i < s.size(); ++i) {
-            int curr = 0;
-            unordered_set<char> seen;
-            // create the longest substring at the starting index
-            for(int j = i; j < s.size(); ++j) {
-                // it has been seen
-                if(seen.find(s[j]) != seen.end()) {
-                    break;
-                } else {
-                    ++curr;
-                    seen.insert(s[j]);
-                }
+        unordered_map<char, int> seen;
+        for(int j = 0, i = 0; j < s.size(); ++j) {
+            if(seen.find(s[j]) != seen.end()) {
+                i = max(seen[s[j]]+1, i);
             }
-            ans = max(curr, ans);
+            ans = max(ans, j-i+1);
+            seen[s[j]] = j;
         }
         return ans;
     }
