@@ -29,24 +29,32 @@ public:
         // if it's already the head, do nothing
         if(head == dictionary[key])
             return;
+        
         // update tail
-        // 1. if it was the tail
         if(tail == dictionary[key]) {
             tail = tail -> prev;
         }
-        // put as most recent
+        
+        // make the ones beside point to the right place
         DoublyLinkedNode* right = dictionary[key]->next;
         DoublyLinkedNode* left = dictionary[key]->prev;
         if(left != NULL)
             left->next = right;
         if(right != NULL)
             right->prev = left;
-        dictionary[key]->prev = NULL;
-        if(size > 1) {
-            head->prev = dictionary[key];
-            dictionary[key]->next = head;
-            head = dictionary[key];
-        }
+        
+        // actually make it the head
+        dictionary[key]->prev = NULL;        
+        head->prev = dictionary[key];
+        dictionary[key]->next = head;
+        head = dictionary[key];
+    }
+    
+    void set_head(int key, int value) {
+        DoublyLinkedNode* front = new DoublyLinkedNode(key, value);
+        front->next = head;
+        head->prev = front;
+        head = front;
     }
     
     int get(int key) {
@@ -71,35 +79,32 @@ public:
             dictionary[key]->val = value;
             // we need to move it to head as well
             make_head(key);
-        } else if(size > cap) {
+        } 
+        // over capacity - evict and add
+        else if(size > cap) {
             // evict last one
             // case that cap is 1
             if(cap == 1) {
-                dictionary.clear();
+                dictionary.erase(tail->key);
                 head = new DoublyLinkedNode(key, value);
                 tail = head;            
             } else {
-                cout << "here";
                 dictionary.erase(tail->key);
                 tail = tail->prev;
                 tail->next = NULL;
                 delete tail->next;
-                DoublyLinkedNode* tmp = new DoublyLinkedNode(key, value);
-                tmp->next = head;
-                head->prev = tmp;
-                head = tmp;
+                set_head(key, value);
             }            
-        } else {
+        }
+        // still in capacity - just add
+        else {
             // add to the head
             if(head == NULL) {
                 head = new DoublyLinkedNode(key, value);
                 tail = head;
                 head->next = NULL;
             } else {
-                DoublyLinkedNode* tmp = new DoublyLinkedNode(key, value);
-                tmp->next = head;
-                head->prev = tmp;
-                head = tmp;
+                set_head(key, value);
             }
         }
         dictionary[key] = head;
