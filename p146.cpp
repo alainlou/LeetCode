@@ -25,19 +25,15 @@ public:
         tail = NULL;
     }
     
-    void printList() {
-        DoublyLinkedNode* curr = head;
-        while(curr != NULL) {
-            cout << "{" << curr->prev << "," << "<" << curr->key << "," << curr->val <<">" << "," << curr->next << "} ";
-            curr = curr->next;
-        }
-        cout <<endl;
-    }
-    
     void make_head(int key) {        
         // if it's already the head, do nothing
         if(head == dictionary[key])
             return;
+        // update tail
+        // 1. if it was the tail
+        if(tail == dictionary[key]) {
+            tail = tail -> prev;
+        }
         // put as most recent
         DoublyLinkedNode* right = dictionary[key]->next;
         DoublyLinkedNode* left = dictionary[key]->prev;
@@ -51,17 +47,9 @@ public:
             dictionary[key]->next = head;
             head = dictionary[key];
         }
-        
-        // setting the appropriate tail - lazy
-        DoublyLinkedNode* curr = head;
-        while(curr->next) {
-            curr = curr->next;
-        }
-        tail = curr;
     }
     
     int get(int key) {
-        cout << "get " << key << endl;
         // not found
         if(dictionary.find(key) == dictionary.end())
             return -1;
@@ -76,7 +64,6 @@ public:
     }
     
     void put(int key, int value) {
-        cout << "put " << key << " " << value << endl;
         ++size;
         // set the value
         if(dictionary.find(key) != dictionary.end()) {
