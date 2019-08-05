@@ -16,12 +16,21 @@ public:
                 break;
             }
         }
-        // find where to swap it
+        // find where to swap it - binary search
         if(to_incr != -1) {
-            for(int j = to_incr+1; j < n; ++j) {
-                if(nums[j] > nums[to_incr] && (j == n-1 || nums[j+1] <= nums[to_incr])) {
-                    swap(nums[to_incr], nums[j]);
+            int left = to_incr+1;
+            int right = n;
+            int mid = (left+right)/2;
+            while(left < right) {
+                if(nums[mid] > nums[to_incr] && (mid == n-1 || nums[mid+1] <= nums[to_incr])) {
+                    swap(nums[to_incr], nums[mid]);
                     break;
+                } else if(nums[mid] > nums[to_incr]) {
+                    left = mid;
+                    mid = (left+right)/2;
+                } else {
+                    right = mid;
+                    mid = (left+right)/2;
                 }
             }
         }
