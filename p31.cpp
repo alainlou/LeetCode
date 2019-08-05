@@ -19,7 +19,7 @@ public:
         // find where to swap it
         if(to_incr != -1) {
             for(int j = to_incr+1; j < n; ++j) {
-                if(nums[j] > nums[to_incr] && (j == n-1 || nums[j+1] < nums[to_incr])) {
+                if(nums[j] > nums[to_incr] && (j == n-1 || nums[j+1] <= nums[to_incr])) {
                     swap(nums[to_incr], nums[j]);
                     break;
                 }
