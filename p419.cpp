@@ -15,7 +15,7 @@ public:
             return false;
         int target = total_sum/2;
         
-        bool possible[target+1];
+        bool possible[total_sum+1];
         memset(possible, false, sizeof(possible));
         
         // dp-ish
@@ -25,8 +25,7 @@ public:
                     possible[i] = true;
                 }
             }
-            if(n < target+1)
-                possible[n] = true;
+            possible[n] = true;
         }
         
         return possible[target];
