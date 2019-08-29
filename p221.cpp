@@ -9,33 +9,20 @@ public:
         if(n == 0) return 0;        
         int m = matrix[0].size();
         
-        int dp[n][m];
+        int dp[n+1][m+1];
         memset(dp, 0, sizeof(dp));
         
         int answer = 0;
         
-        for(int i = 0; i < n; ++i) {
-            for(int j = 0; j < m; ++j) {
-                if(matrix[i][j] == '1') {
-                    dp[i][j] = 1;
-                    // check if we can extend a square
-                    if(i > 0 && j > 0 && dp[i-1][j-1] > 0) {
-                        int l = dp[i-1][j-1];
-                        int s = 0;
-                        for(int k = 1; k <= l; ++k) {
-                            if(matrix[i-k][j] == '0' || matrix[i][j-k] == '0') {
-                                break;
-                            } else {
-                                ++s;
-                            }
-                        }
-                        dp[i][j] = s+1;
-                    }
+        for(int i = 1; i <= n; ++i) {
+            for(int j = 1; j <= m; ++j) {
+                if(matrix[i-1][j-1] == '1') {
+                    dp[i][j] = min(min(dp[i][j-1], dp[i-1][j]), dp[i-1][j-1]) + 1;
+                    answer = max(answer, dp[i][j]);
                 }
-                answer = max(answer, dp[i][j]*dp[i][j]);
             }
         }
         
-        return answer;
+        return answer*answer;
     }
 };
