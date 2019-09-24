@@ -20,13 +20,11 @@ public:
             for(char c : puzzles[i]) {
                 mask = mask|((int)pow(2, c-'a'));
             }
-            int submask = mask;
-            while(submask > 0) {
-                if((int)pow(2,puzzles[i][0]-'a')&submask > 0 && 
+            for(int submask = mask; submask > 0; submask = (submask-1) & mask) {
+                if((submask&(int)pow(2,puzzles[i][0]-'a')) > 0 && 
                     counts.find(submask) != counts.end()) {
                     solution[i] += counts[submask];
                 }
-                submask = (submask-1) & mask;
             }
         }
         return solution;
