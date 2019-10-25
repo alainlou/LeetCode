@@ -6,39 +6,23 @@ using namespace std;
 class Solution {
 public:
     ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
-        ListNode * head = l1;
-        while(l1 && l2){
-            if(l1->val + l2->val < 10){
-                l1->val += l2->val;
-            }
-            else{
-                l1->val += l2->val - 10;
-                if(l2->next){
-                    l2->next->val += 1;
-                    if(!l1->next){
-                        l1->next = new ListNode(0);
-                    }
-                }
-                else if(l1->next){
-                    l1->next->val += 1;
-                    if(!l2->next){
-                        l2->next = new ListNode(0);
-                    }
-                }
-                else{
-                    l1->next = new ListNode(1);
-                }
-            }
-            if(!(l1->next)){
-                l1->next=l2->next;
-                l2=NULL;
-            }
-            else{
-                l1=l1->next;
-                l2=l2->next;
-            }
+        ListNode* head = new ListNode(0);
+        ListNode* curr = head;
+        bool carry = 0;
+        while(curr) {
+            int n = 0;
+            n += l1 ? l1->val : 0;
+            n += l2 ? l2->val : 0;
+            n += carry;
+            carry = n > 9 ? 1 : 0;
+            n %= 10;
+            curr->val = n;
+            if((l1 && l1->next) || (l2 && l2->next) || carry)
+                curr->next = new ListNode(0);
+            curr = curr->next;
+            l1 = l1 ? l1->next : NULL;
+            l2 = l2 ? l2->next : NULL;
         }
-        
         return head;
     }
 };
