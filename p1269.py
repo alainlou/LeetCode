@@ -1,11 +1,10 @@
 class Solution:
     def numWays(self, steps: int, arrLen: int) -> int:
-        dp = [1] + [0] * (steps+1)
-        for i in range(steps):
-            cp = dp[:]
-            for j in range(i+2):
-                cp[j] = dp[j-1]+dp[j]
-                if j+1 < arrLen:
-                    cp[j] += dp[j+1]
+        dp = [1, 1]+[0]*499
+        for i in range(1, steps):
+            cp = [0]*502
+            cp[0] = dp[0]+dp[1]
+            for j in range(1, min(i+2, arrLen)):
+                cp[j] = dp[j-1]+dp[j]+dp[j+1]
             dp = cp
         return dp[0]%(10**9+7)
