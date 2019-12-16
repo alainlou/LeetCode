@@ -1,3 +1,5 @@
+from DS.ListNode import ListNode
+
 class Solution:
     def getDecimalValue(self, head: ListNode) -> int:
         lst = []
