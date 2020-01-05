@@ -1,55 +1,31 @@
 class Solution:
     def isSolvable(self, words: List[str], result: str) -> bool:
-        def check(lhs, rhs, dictionary):
-            left = 0
-            right = 0
-            for i in lhs:
-                left += dictionary[i] * lhs[i]
-            for i in rhs:
-                right += dictionary[i] * rhs[i]
-            return left == right
-
-        def process(curr, basket, lhs, rhs, chars, leading):
-            if len(curr) == len(chars):
-                if check(lhs, rhs, curr):
-                    return True
-                return False
-            for i in range(len(basket)):
-                char = chars[len(curr)]
-                if char in leading and basket[i] == 0:
-                    continue
-                tmp = basket.pop(i)
-                curr[char] = tmp
-                if process(curr, basket, lhs, rhs, chars, leading):
-                    return True
-                del curr[char]
-                basket.insert(i, tmp)
-            return False
-
-        basket = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-        chars = []
-        leading = set()
-        lhs = {}
-        rhs = {}
-        for w in words:
-            n = len(w)
-            leading.add(w[0])
-            for i in range(n):
-                if w[i] not in chars:
-                    chars.append(w[i])
-                if w[i] not in lhs:
-                    lhs[w[i]] = pow(10, n-i-1)
-                else:
-                    lhs[w[i]] += pow(10, n-i-1)
         n = len(result)
-        leading.add(result[0])
-        for i, c in enumerate(result):
-            if c not in chars:
-                chars.append(c)
-            if c not in rhs:
-                rhs[c] = pow(10, n-i-1)
-            else:
-                rhs[c] += pow(10, n-i-1)
-
-        return process({}, basket, lhs, rhs, chars, leading)
-                
+        if n < max(map(len, words)):
+            return False
+        words.append(result)
+        m = len(words)
+        c2n = {}
+        n2c = {}
+        def recurse(word_idx, char_idx, carry):
+            if char_idx >= n:
+                if carry == 0:
+                    print(c2n)
+                return carry == 0
+            if word_idx == m:
+                return recurse(0, char_idx+1, carry//10) if carry%10 == 0 else False
+            if char_idx > len(words[word_idx])-1:
+                return recurse(word_idx+1, char_idx, carry)
+            c = words[word_idx][~char_idx]
+            sign = -1 if word_idx == m-1 else 1
+            if c in c2n:
+                return recurse(word_idx+1, char_idx, carry+sign*c2n[c])
+            for i in range(10):
+                if i not in n2c and (c != words[word_idx][0] or i != 0):
+                    c2n[c] = i
+                    n2c[i] = c
+                    if recurse(word_idx+1, char_idx, carry+sign*i):
+                        return True
+                    del c2n[c]
+                    del n2c[i]
+        return recurse(0, 0, 0)
