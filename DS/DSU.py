@@ -1,11 +1,11 @@
 class DSU:
     def __init__(self, n):
-        self.parents = [i for i in range(n)]
+        self.parent = list(range(n))
 
     def find(self, target):
-        if self.parents[target] != target:
-            self.parents[target] = self.find(self.parents[target])
-        return self.parents[target]
+        if self.parent[target] != target:
+            self.parent[target] = self.find(self.parent[target])
+        return self.parent[target]
 
-    def union(self, child, parent):
-        self.parents[child] = parent
+    def union(self, c, p):
+        self.parent[self.find(c)] = p
