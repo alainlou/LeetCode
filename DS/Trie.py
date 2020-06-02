@@ -6,7 +6,7 @@ class TrieNode:
 class Trie:
     def __init__(self):
         self.root = TrieNode()
-    
+
     def insert(self, s):
         node = self.root
         for c in s:
@@ -15,7 +15,7 @@ class Trie:
                 node.children[index] = TrieNode()
             node = node.children[index]
         node.end = True
-        
+
     def find(self, s):
         node = self.root
         for c in s:

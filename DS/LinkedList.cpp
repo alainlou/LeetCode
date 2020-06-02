@@ -47,7 +47,7 @@ int main () {
     list->insert(2);
     list->insert(3);
     list->insert(4);
-    
+
     // Print the LinkedList
     list->print();
 
