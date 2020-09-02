@@ -16,7 +16,7 @@ struct DSU {
         return parent[i];
     }
     void combine(int i, int j) {
-        parent[find(i)] = parent[j];
+        parent[find(i)] = find(j);
     }
     void print() {
         for(int i = 0; i < 10; ++i) {

@@ -8,4 +8,4 @@ class DSU:
         return self.parent[target]
 
     def union(self, c, p):
-        self.parent[self.find(c)] = p
+        self.parent[self.find(c)] = self.find(p)
